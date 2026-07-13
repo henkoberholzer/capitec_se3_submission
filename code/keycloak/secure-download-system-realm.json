@@ -1,0 +1,122 @@
+{
+  "realm": "secure-download-system",
+  "enabled": true,
+  "displayName": "Secure Document Download System Realm",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": false,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": false,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "clients": [
+    {
+      "clientId": "sds-api",
+      "name": "Secure Download Service Resource Server",
+      "enabled": true,
+      "bearerOnly": true
+    },
+    {
+      "clientId": "sds-download-client",
+      "name": "Public Download Client",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "${SDS_DOWNLOAD_CLIENT_SECRET}",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "defaultClientScopes": ["securedownload:download"]
+    },
+    {
+      "clientId": "sds-sample-client",
+      "name": "Sample Content Management Client",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "${SDS_SAMPLE_CLIENT_SECRET}",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "defaultClientScopes": ["securedownload:create", "securedownload:revoke", "securedownload:getinfo"]
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "securedownload:download",
+      "description": "Permission to download files via secure download links",
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        {
+          "name": "audience-sds-api",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "sds-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "name": "securedownload:create",
+      "description": "Permission to create secure download links",
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        {
+          "name": "audience-sds-api",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "sds-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "name": "securedownload:revoke",
+      "description": "Permission to revoke secure download links",
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        {
+          "name": "audience-sds-api",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "sds-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "name": "securedownload:getinfo",
+      "description": "Permission to retrieve document metadata",
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        {
+          "name": "audience-sds-api",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "sds-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "scopeMappings": [],
+  "clientScopeMappings": {
+  },
+  "users": []
+}

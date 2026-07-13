@@ -1,0 +1,33 @@
+{
+  "name": "audit-s3-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.s3.S3SinkConnector",
+    "tasks.max": "1",
+    "topics": "document-archive-event,document-download-event",
+    "s3.region": "${MINIO_REGION}",
+    "s3.bucket.name": "${MINIO_ARCHIVE_BUCKET}",
+    "s3.part.size": "5242880",
+    "s3.endpoint": "http://minio:9000",
+    "s3.path.style.access.enabled": "true",
+    "s3.path.style.access": "true",
+    "store.url": "http://minio:9000",
+    "aws.access.key.id": "${MINIO_ROOT_USER}",
+    "aws.secret.access.key": "${MINIO_ROOT_PASSWORD}",
+    "storage.class": "io.confluent.connect.s3.storage.S3Storage",
+    "format.class": "io.confluent.connect.s3.format.json.JsonFormat",
+    "flush.size": "1",
+    "rotate.interval.ms": "10000",
+    "rotate.schedule.interval.ms": "60000",
+    "timestamp.extractor": "Wallclock",
+    "locale": "en_US",
+    "timezone": "UTC",
+    "partitioner.class": "io.confluent.connect.storage.partitioner.TimeBasedPartitioner",
+    "path.format": "YYYY'_'MM'_'dd'",
+    "partition.duration.ms": "3600000",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "errors.tolerance": "all",
+    "errors.deadletterqueue.topic.name": "audit-s3-sink-dlq",
+    "errors.deadletterqueue.topic.replication.factor": "1"
+  }
+}

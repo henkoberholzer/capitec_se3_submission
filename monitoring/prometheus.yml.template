@@ -1,0 +1,14 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: management-service
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['management-service:${MANAGEMENT_SERVICE_PORT}']
+
+  - job_name: download-service
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['download-service:${DOWNLOAD_SERVICE_PORT}']

@@ -1,0 +1,79 @@
+spring:
+  application:
+    name: management-service
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI}
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:http://keycloak:8080/realms/secure-download-system/protocol/openid-connect/certs}
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    consumer:
+      group-id: sds-management-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+server:
+  port: ${SERVER_PORT}
+  shutdown: graceful
+  error:
+    whitelabel:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+sds:
+  download:
+    base-url: ${DOWNLOAD_SERVICE_BASE_URL}
+  security:
+    audience: ${KEYCLOAK_AUDIENCE}
+  storage:
+    endpoint: ${MINIO_ENDPOINT}
+    region: ${MINIO_REGION}
+    access-key: ${MINIO_ACCESS_KEY}
+    secret-key: ${MINIO_SECRET_KEY}
+    documents-bucket: ${MINIO_DOCUMENTS_BUCKET}
+  upload:
+    max-file-size-mb: ${MAX_FILE_SIZE_MB}
+  outbox:
+    poll-interval-seconds: ${OUTBOX_POLL_INTERVAL_SECONDS}
+    batch-size: ${OUTBOX_BATCH_SIZE}
+  kafka:
+    topics:
+      document-archive: document-archive-event
+  token:
+    length: ${TOKEN_LENGTH:8}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  structured:
+    format:
+      console: logstash
